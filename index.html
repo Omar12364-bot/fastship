@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FastShip Express - إدارة الشحن والتوصيل</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════ SIDEBAR ═══════════════════════════════ -->
+<nav class="sidebar">
+  <div class="logo-wrap">
+    <div class="logo-icon">📦</div>
+    <div class="logo-text">
+      <h3>FastShip Express</h3>
+      <p>إدارة الشحن والتوصيل</p>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-item active" onclick="showPage('dashboard', this)">
+      <span class="ni">🏠</span> لوحة التحكم
+    </div>
+    <div class="nav-item" onclick="showPage('shipments', this)">
+      <span class="ni">📦</span> الشحنات
+    </div>
+    <div class="nav-item" onclick="showPage('returns', this)">
+      <span class="ni">🔄</span> طلبات الاسترجاع
+    </div>
+
+    <div class="nav-label">الإدارة</div>
+
+    <div class="nav-item" onclick="toggleSub('merchants-sub', this)">
+      <span class="ni">🏪</span> إدارة التجار
+      <span class="arrow">›</span>
+    </div>
+    <div class="nav-sub" id="merchants-sub" style="display:none">
+      <div class="nav-item" onclick="showPage('merchants', this)">التجار</div>
+      <div class="nav-item" onclick="showPage('pricing', this)">قوائم الاسعار</div>
+    </div>
+
+    <div class="nav-item" onclick="toggleSub('agents-sub', this)">
+      <span class="ni">🚴</span> إدارة المناديب
+      <span class="arrow">›</span>
+    </div>
+    <div class="nav-sub" id="agents-sub" style="display:none">
+      <div class="nav-item" onclick="showPage('agents', this)">المناديب</div>
+    </div>
+
+    <div class="nav-item" onclick="toggleSub('accounts-sub', this)">
+      <span class="ni">💰</span> الحسابات
+      <span class="arrow">›</span>
+    </div>
+    <div class="nav-sub" id="accounts-sub" style="display:none">
+      <div class="nav-item" onclick="showPage('entitlements', this)">المستحقات</div>
+      <div class="nav-item" onclick="showPage('transfers', this)">عمليات التحويل</div>
+      <div class="nav-item" onclick="showPage('expenses', this)">المصاريف</div>
+    </div>
+
+    <div class="nav-item" onclick="toggleSub('settings-sub', this)">
+      <span class="ni">⚙️</span> التعريفات الاساسية
+      <span class="arrow">›</span>
+    </div>
+    <div class="nav-sub" id="settings-sub" style="display:none">
+      <div class="nav-item" onclick="showPage('roles', this)">ادوار المستخدمين</div>
+      <div class="nav-item" onclick="showPage('users', this)">المستخدمين</div>
+      <div class="nav-item" onclick="showPage('cities', this)">المدن</div>
+      <div class="nav-item" onclick="showPage('zones', this)">المناطق</div>
+      <div class="nav-item" onclick="showPage('branches', this)">الفروع</div>
+      <div class="nav-item" onclick="showPage('reasons', this)">اسباب الالغاء والتاجيل</div>
+    </div>
+  </div>
+
+  <div class="sidebar-foot">Powered by<br><b>Muhammed Mashhour</b></div>
+</nav>
+
+<!-- ═══════════════════════════════ MAIN ═══════════════════════════════ -->
+<div class="main">
+
+  <!-- topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div>
+        <div class="topbar-breadcrumb">DASHBOARD</div>
+        <div class="topbar-title" id="pageTitle">لوحة التحكم</div>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <span>🔍</span>
+      <input type="text" placeholder="ادخل رقم البوليصة...">
+    </div>
+    <div class="topbar-right">
+      <div class="live-badge"><div class="live-dot"></div> البيانات محدثة</div>
+      <div class="icon-btn">
+        🔔
+        <span class="notif-dot">0</span>
+      </div>
+      <div class="icon-btn">☰</div>
+    </div>
+  </header>
+
+  <!-- content -->
+  <div class="content">
+
+    <!-- ══════════ DASHBOARD ══════════ -->
+    <div class="page active" id="page-dashboard">
+      <div class="top-card">
+        <div class="top-card-info">
+          <h2>لوحة التحكم</h2>
+          <p>متابعة الأداء العام للشحنات بشكل واضح واحترافي</p>
+        </div>
+        <div class="date-row">
+          <div class="date-field">
+            <label>📅 من</label>
+            <input type="date">
+          </div>
+          <div class="date-field">
+            <label>📅 إلى</label>
+            <input type="date">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-hd"><span>📊</span> المؤشرات الرئيسية</div>
+
+      <!-- row 1 -->
+      <div class="kpi-grid">
+        <div class="kpi s-blue">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--blue)"></span> قيد التوصيل</span><span class="kpi-ico ico-blue">🚚</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-orange">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--accent)"></span> انتظار الالتقاط</span><span class="kpi-ico ico-orange">📍</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-teal">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--teal)"></span> تم الالتقاط</span><span class="kpi-ico ico-teal">✈️</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-purple">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--purple)"></span> في المخزن</span><span class="kpi-ico ico-purple">🏭</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-yellow">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--yellow)"></span> راجعة للمخزن</span><span class="kpi-ico ico-yellow">📦</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+      </div>
+
+      <!-- row 2 -->
+      <div class="kpi-grid">
+        <div class="kpi s-red">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--red)"></span> لم يرد</span><span class="kpi-ico ico-red">📵</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-yellow">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--yellow)"></span> تاجيل</span><span class="kpi-ico ico-yellow">⏰</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-gray">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--muted)"></span> الغاء</span><span class="kpi-ico ico-gray">❌</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-green">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--green)"></span> تم التوصيل</span><span class="kpi-ico ico-green">✅</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-pink">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--pink)"></span> جاهز للرجاع</span><span class="kpi-ico ico-pink">🔄</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+      </div>
+
+      <!-- row 3 -->
+      <div class="kpi-grid">
+        <div class="kpi s-blue">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--blue)"></span> قيد الرجاع</span><span class="kpi-ico ico-blue">↩️</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-teal">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--teal)"></span> مرتجع</span><span class="kpi-ico ico-teal">📮</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-gray">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--muted)"></span> مغلقة</span><span class="kpi-ico ico-gray">🔒</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-green">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--green)"></span> نسبة التوصيل</span><span class="kpi-ico ico-green">📈</span></div>
+          <div class="kpi-val" style="font-size:22px">0.00%</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-orange">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--accent)"></span> انتظار الالتقاط من العميل</span><span class="kpi-ico ico-orange">🏠</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+      </div>
+
+      <!-- row 4 -->
+      <div class="kpi-grid g4" style="margin-top:9px">
+        <div class="kpi s-green">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--green)"></span> تم الالتقاط من العميل</span><span class="kpi-ico ico-green">🤝</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-blue">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--blue)"></span> قيد الاسترجاع للتاجر</span><span class="kpi-ico ico-blue">🔃</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-teal">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--teal)"></span> تم الاسترجاع للتاجر</span><span class="kpi-ico ico-teal">🏪</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+        <div class="kpi s-purple">
+          <div class="kpi-top"><span class="kpi-label"><span class="kpi-dot" style="background:var(--purple)"></span> كل الشحنات</span><span class="kpi-ico ico-purple">📋</span></div>
+          <div class="kpi-val">0</div><div class="kpi-link">تفاصيل ←</div>
+        </div>
+      </div>
+
+      <!-- delayed -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:22px;margin-bottom:10px">
+        <div class="section-hd" style="margin:0"><span>🚨</span> الشحنات المتأخرة</div>
+        <button class="btn btn-outline btn-sm">👁️ عرض الكل</button>
+      </div>
+      <div class="delayed-grid">
+        <div class="delayed-card">
+          <div class="delayed-tag">⏰ تحتاج متابعة</div>
+          <div class="delayed-period">يوم</div>
+          <div class="delayed-val">0</div>
+          <div class="delayed-status">● حالة متأخرة - تحتاج إجراء</div>
+        </div>
+        <div class="delayed-card">
+          <div class="delayed-tag">⏰ تحتاج متابعة</div>
+          <div class="delayed-period">يومين</div>
+          <div class="delayed-val">0</div>
+          <div class="delayed-status">● حالة متأخرة - تحتاج إجراء</div>
+        </div>
+        <div class="delayed-card">
+          <div class="delayed-tag">⏰ تحتاج متابعة</div>
+          <div class="delayed-period">3 أيام</div>
+          <div class="delayed-val">0</div>
+          <div class="delayed-status">● حالة متأخرة - تحتاج إجراء</div>
+        </div>
+        <div class="delayed-card">
+          <div class="delayed-tag">⏰ تحتاج متابعة</div>
+          <div class="delayed-period">أكثر من ٣ أيام</div>
+          <div class="delayed-val">0</div>
+          <div class="delayed-status">● حالة متأخرة - تحتاج إجراء</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ SHIPMENTS ══════════ -->
+    <div class="page" id="page-shipments">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline" onclick="showToast('جاري تحميل الملف...')">📥 تحميل ملف مثال</button>
+          <button class="btn btn-accent" onclick="openModal('shipment-modal')">➕ اضافة جديد</button>
+        </div>
+      </div>
+
+      <div class="filter-card">
+        <div class="filter-title">
+          <span>🔽 فلترة الشحنات</span>
+          <button class="btn btn-outline btn-sm" onclick="showToast('تم مسح الفلاتر')">🔄 مسح الفلاتر</button>
+        </div>
+        <div class="filter-grid">
+          <div class="form-grp"><label>من تاريخ</label><input type="date" class="form-ctrl"></div>
+          <div class="form-grp"><label>إلى تاريخ</label><input type="date" class="form-ctrl"></div>
+          <div class="form-grp"><label>المدينة</label>
+            <select class="form-ctrl"><option value="">اختر المدينة</option><option>القاهرة</option><option>الجيزة</option><option>الإسكندرية</option></select>
+          </div>
+          <div class="form-grp"><label>المنطقة</label>
+            <select class="form-ctrl"><option value="">اختر المنطقة</option></select>
+          </div>
+        </div>
+        <div class="filter-grid" style="margin-top:10px">
+          <div class="form-grp"><label>المندوب</label>
+            <select class="form-ctrl"><option value="">اختر المندوب</option></select>
+          </div>
+          <div class="form-grp"><label>التاجر</label>
+            <select class="form-ctrl"><option value="">اختر التاجر</option></select>
+          </div>
+          <div class="form-grp"><label>الحالة</label>
+            <select class="form-ctrl"><option value="">اختر الحالة</option><option>قيد التوصيل</option><option>تم التوصيل</option><option>مرتجع</option><option>ملغي</option></select>
+          </div>
+          <div class="form-grp"><label>سبب التأجيل / الإلغاء</label>
+            <select class="form-ctrl"><option value="">اختر السبب</option><option>لم يرد مرتين</option><option>رفض الاستلام</option><option>المنتج خطأ</option></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div class="toolbar-left">
+            <button class="btn btn-green btn-sm">🖨️ طباعة بوليصة</button>
+            <button class="btn btn-blue btn-sm">👤 تعيين على مندوب</button>
+            <button class="btn btn-yellow btn-sm">🔄 تغيير حالة الشحنة</button>
+            <button class="btn btn-outline btn-sm">📤 تصدير إلى Excel</button>
+            <button class="btn btn-red btn-sm">🔃 إنشاء طلب استرجاع</button>
+          </div>
+          <div class="count-badge">الشحنات المحددة: (0) شحنة</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th><input type="checkbox"></th>
+                <th>التاريخ</th>
+                <th>رقم الشحنة</th>
+                <th>كود التاجر</th>
+                <th>اسم المندوب</th>
+                <th>اسم المستلم</th>
+                <th>رقم هاتف المستلم</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="shipments-tbody">
+              <tr><td colspan="8"><div class="empty-state"><div class="empty-ico">📭</div><p>لا توجد بيانات للعرض</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pager">
+          <select class="per-page"><option>10</option><option>25</option><option>50</option></select>
+          <div class="pager-btns">
+            <div class="pager-btn">‹</div>
+            <div class="pager-btn active">1</div>
+            <div class="pager-btn">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ RETURNS ══════════ -->
+    <div class="page" id="page-returns">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <button class="btn btn-accent" onclick="showToast('إنشاء طلب استرجاع جديد')">➕ اضافة جديد</button>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>رقم الطلب</th><th>التاريخ</th><th>التاجر</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+            <tbody><tr><td colspan="5"><div class="empty-state"><div class="empty-ico">🔄</div><p>لا توجد بيانات للعرض</p></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ MERCHANTS ══════════ -->
+    <div class="page" id="page-merchants">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;justify-content:flex-end">
+        <div class="search-wrap" style="max-width:260px"><span>🔍</span><input type="text" placeholder="البحث..."></div>
+        <button class="btn btn-outline">🔍</button>
+        <button class="btn btn-accent" onclick="openModal('merchant-modal')">➕ اضافة جديد</button>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>الاسم</th><th>الكود</th><th>الفرع</th><th>الهاتف</th><th>نشط</th><th>الإجراءات</th></tr></thead>
+            <tbody><tr><td colspan="6"><div class="empty-state"><div class="empty-ico">🏪</div><p>لا توجد بيانات للعرض</p></div></td></tr></tbody>
+          </table>
+        </div>
+        <div class="pager"><select class="per-page"><option>10</option></select><div class="pager-btns"><div class="pager-btn active">1</div></div></div>
+      </div>
+    </div>
+
+    <!-- ══════════ PRICING ══════════ -->
+    <div class="page" id="page-pricing">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;justify-content:flex-end">
+        <div class="search-wrap" style="max-width:260px"><span>🔍</span><input type="text" placeholder="البحث..."></div>
+        <button class="btn btn-outline">🔍</button>
+        <button class="btn btn-accent" onclick="openPricingModal()">➕ اضافة جديد</button>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>اسم القائمة</th><th>نشط</th><th>الإجراءات</th></tr></thead>
+            <tbody id="pricing-tbody">
+              <tr>
+                <td>قائمة ١٠٠ شحنة</td>
+                <td><span class="badge badge-green">● نشط</span></td>
+                <td><span class="act-btn" onclick="openPricingModal()">✏️</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pager"><select class="per-page"><option>10</option></select><div class="pager-btns"><div class="pager-btn active">1</div></div></div>
+      </div>
+    </div>
+
+    <!-- ══════════ AGENTS ══════════ -->
+    <div class="page" id="page-agents">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <button class="btn btn-accent" onclick="openModal('agent-modal')">➕ اضافة جديد</button>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>الاسم</th><th>الهاتف</th><th>المنطقة</th><th>نشط</th><th>الإجراءات</th></tr></thead>
+            <tbody><tr><td colspan="5"><div class="empty-state"><div class="empty-ico">🚴</div><p>لا توجد بيانات للعرض</p></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ ENTITLEMENTS ══════════ -->
+    <div class="page" id="page-entitlements">
+      <div class="top-card" style="margin-bottom:16px">
+        <div class="top-card-info">
+          <h2>ملخص عام</h2>
+          <p>متابعة شاملة لحركة المستحقات والمدفوعات خلال الفترة المحددة.</p>
+        </div>
+        <div class="date-row">
+          <div class="date-field"><label>📅 من</label><input type="date" class="form-ctrl"></div>
+          <div class="date-field"><label>📅 إلى</label><input type="date" class="form-ctrl"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-bottom:14px">
+        <div class="kpi" style="flex:1;border-right:3px solid var(--accent)">
+          <div class="kpi-label">إجمالي المديونية</div>
+          <div class="kpi-val" style="color:var(--accent)">-</div>
+        </div>
+        <div class="kpi" style="flex:1;border-right:3px solid var(--green)">
+          <div class="kpi-label">إجمالي المدفوعات</div>
+          <div class="kpi-val" style="color:var(--green)">-</div>
+        </div>
+        <div class="kpi" style="flex:1;border-right:3px solid var(--blue)">
+          <div class="kpi-label">المتبقي</div>
+          <div class="kpi-val" style="color:var(--blue)">-</div>
+        </div>
+      </div>
+
+      <div class="filter-card">
+        <div class="section-hd"><span>💵</span> ملخص المستحقات</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px">عرض تفصيلي لمستحقات المناديب والتجار مع إمكانية تسديد أو مراجعة المحفظة.</p>
+        <div class="entitle-tabs">
+          <div class="entitle-tab active" onclick="switchEntitleTab(this,'agents')">مستحقات المناديب</div>
+          <div class="entitle-tab" onclick="switchEntitleTab(this,'merchants')">مستحقات التجار</div>
+        </div>
+        <div class="table-card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>الاسم</th><th>المديونية</th><th>المدفوعات</th><th>المتبقي</th><th>الإجراءات</th></tr></thead>
+              <tbody><tr><td colspan="5"><div class="empty-state"><div class="empty-ico">💰</div><p>لا توجد بيانات للعرض</p></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ TRANSFERS ══════════ -->
+    <div class="page" id="page-transfers">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <button class="btn btn-accent" onclick="openModal('transfer-modal')">➕ اضافة جديد</button>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>تاريخ العملية</th><th>المبلغ</th><th>طريقة الدفع</th><th>ملاحظات</th></tr></thead>
+            <tbody><tr><td colspan="4"><div class="empty-state"><div class="empty-ico">💳</div><p>لا توجد بيانات للعرض</p></div></td></tr></tbody>
+          </table>
+        </div>
+        <div class="pager"><select class="per-page"><option>10</option></select><div class="pager-btns"><div class="pager-btn active">1</div></div></div>
+      </div>
+    </div>
+
+    <!-- ══════════ EXPENSES ══════════ -->
+    <div class="page" id="page-expenses">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <button class="btn btn-accent" onclick="showToast('إضافة مصروف جديد')">➕ اضافة جديد</button>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>ملاحظات</th><th>الإجراءات</th></tr></thead>
+            <tbody><tr><td colspan="5"><div class="empty-state"><div class="empty-ico">💸</div><p>لا توجد بيانات للعرض</p></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ REASONS ══════════ -->
+    <div class="page" id="page-reasons">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;justify-content:flex-end">
+        <div class="search-wrap" style="max-width:260px"><span>🔍</span><input type="text" placeholder="البحث..."></div>
+        <button class="btn btn-outline">🔍</button>
+        <button class="btn btn-accent" onclick="openModal('reason-modal')">➕ اضافة جديد</button>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>الاسم</th><th>النوع</th><th>نشط</th><th>تاريخ الاضافة</th><th>الإجراءات</th></tr></thead>
+            <tbody id="reasons-tbody">
+              <tr>
+                <td>لم يرد مرتين</td>
+                <td><span class="badge badge-red">إلغاء</span></td>
+                <td><span class="badge badge-green">● نشط</span></td>
+                <td>١٥ أبريل ٢٠٢٦</td>
+                <td><span class="act-btn" onclick="editReason('لم يرد مرتين','إلغاء')">✏️</span></td>
+              </tr>
+              <tr>
+                <td>رفض بعد معاينة</td>
+                <td><span class="badge badge-red">إلغاء</span></td>
+                <td><span class="badge badge-green">● نشط</span></td>
+                <td>١٥ أبريل ٢٠٢٦</td>
+                <td><span class="act-btn" onclick="editReason('رفض بعد معاينة','إلغاء')">✏️</span></td>
+              </tr>
+              <tr>
+                <td>رفض الاستلام</td>
+                <td><span class="badge badge-red">إلغاء</span></td>
+                <td><span class="badge badge-green">● نشط</span></td>
+                <td>١٥ أبريل ٢٠٢٦</td>
+                <td><span class="act-btn" onclick="editReason('رفض الاستلام','إلغاء')">✏️</span></td>
+              </tr>
+              <tr>
+                <td>المنتج خطأ</td>
+                <td><span class="badge badge-red">إلغاء</span></td>
+                <td><span class="badge badge-green">● نشط</span></td>
+                <td>١٥ أبريل ٢٠٢٦</td>
+                <td><span class="act-btn" onclick="editReason('المنتج خطأ','إلغاء')">✏️</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pager"><select class="per-page"><option>10</option></select><div class="pager-btns"><div class="pager-btn active">1</div></div></div>
+      </div>
+    </div>
+
+    <!-- ══════════ CITIES ══════════ -->
+    <div class="page" id="page-cities">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;justify-content:flex-end">
+        <div class="search-wrap" style="max-width:260px"><span>🔍</span><input type="text" placeholder="البحث عن مدينة..." oninput="filterCities(this.value)"></div>
+        <button class="btn btn-accent" onclick="openCityModal()">➕ اضافة مدينة</button>
+      </div>
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div class="toolbar-left"><span class="count-badge" id="cities-count">عدد المدن: 0</span></div>
+          <div class="toolbar-right"><button class="btn btn-outline btn-sm" onclick="showToast('📤 جاري التصدير...')">📤 تصدير</button></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>اسم المدينة</th><th>الكود</th><th>عدد المناطق</th><th>نشط</th><th>الإجراءات</th></tr></thead>
+            <tbody id="cities-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pager"><select class="per-page"><option>10</option><option>25</option></select><div class="pager-btns"><div class="pager-btn active">1</div></div></div>
+      </div>
+    </div>
+
+    <!-- ══════════ ZONES ══════════ -->
+    <div class="page" id="page-zones">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;justify-content:flex-end">
+        <div class="form-grp" style="min-width:180px">
+          <select class="form-ctrl" id="zone-city-filter" onchange="filterZonesByCity(this.value)">
+            <option value="">كل المدن</option>
+          </select>
+        </div>
+        <div class="search-wrap" style="max-width:220px"><span>🔍</span><input type="text" placeholder="البحث..." oninput="filterZones(this.value)"></div>
+        <button class="btn btn-accent" onclick="openZoneModal()">➕ اضافة منطقة</button>
+      </div>
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div class="toolbar-left"><span class="count-badge" id="zones-count">عدد المناطق: 0</span></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>اسم المنطقة</th><th>المدينة</th><th>نشط</th><th>الإجراءات</th></tr></thead>
+            <tbody id="zones-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pager"><select class="per-page"><option>10</option><option>25</option></select><div class="pager-btns"><div class="pager-btn active">1</div></div></div>
+      </div>
+    </div>
+
+    <!-- ══════════ BRANCHES ══════════ -->
+    <div class="page" id="page-branches">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;justify-content:flex-end">
+        <button class="btn btn-accent" onclick="openBranchModal()">➕ اضافة فرع</button>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>اسم الفرع</th><th>المدينة</th><th>المدير</th><th>الهاتف</th><th>نشط</th><th>الإجراءات</th></tr></thead>
+            <tbody id="branches-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pager"><select class="per-page"><option>10</option></select><div class="pager-btns"><div class="pager-btn active">1</div></div></div>
+      </div>
+    </div>
+
+    <!-- ══════════ ROLES ══════════ -->
+    <div class="page" id="page-roles">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;justify-content:flex-end">
+        <button class="btn btn-accent" onclick="openRoleModal()">➕ اضافة دور</button>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>اسم الدور</th><th>الصلاحيات</th><th>عدد المستخدمين</th><th>نشط</th><th>الإجراءات</th></tr></thead>
+            <tbody id="roles-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ USERS ══════════ -->
+    <div class="page" id="page-users">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;justify-content:flex-end">
+        <div class="search-wrap" style="max-width:260px"><span>🔍</span><input type="text" placeholder="البحث..."></div>
+        <button class="btn btn-accent" onclick="openUserModal()">➕ اضافة مستخدم</button>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>الاسم</th><th>اسم المستخدم</th><th>الدور</th><th>الهاتف</th><th>نشط</th><th>الإجراءات</th></tr></thead>
+            <tbody id="users-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pager"><select class="per-page"><option>10</option></select><div class="pager-btns"><div class="pager-btn active">1</div></div></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ═══════════════ MODALS ═══════════════ -->
+
+<!-- Shipment Modal -->
+<div class="overlay" id="shipment-modal">
+  <div class="modal">
+    <div class="modal-hd">
+      <h3>اضافة جديد</h3>
+      <button class="modal-close" onclick="closeModal('shipment-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-sect">
+        <div class="modal-sect-title">بيانات عامة</div>
+        <div class="form-row">
+          <div class="form-grp"><label>التاجر *</label><select class="form-ctrl"><option value="">اختر التاجر</option></select></div>
+          <div class="form-grp"><label>الفرع *</label><select class="form-ctrl"><option value="">اختر الفرع</option></select></div>
+          <div class="form-grp"><label>الرقم المرجعي</label><input type="text" class="form-ctrl" placeholder="الرقم المرجعي"></div>
+        </div>
+      </div>
+      <div class="modal-sect">
+        <div class="modal-sect-title">بيانات المستلم</div>
+        <div class="form-row">
+          <div class="form-grp"><label>اسم المستلم *</label><input type="text" class="form-ctrl" placeholder="اسم المستلم"></div>
+          <div class="form-grp"><label>رقم الهاتف *</label><input type="tel" class="form-ctrl" placeholder="رقم الهاتف"></div>
+          <div class="form-grp"><label>رقم الهاتف بديل</label><input type="tel" class="form-ctrl" placeholder="رقم الهاتف بديل"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-grp"><label>المدينة *</label><select class="form-ctrl"><option value="">اختر المدينة</option><option>القاهرة</option><option>الجيزة</option><option>الإسكندرية</option></select></div>
+          <div class="form-grp"><label>المنطقة *</label><select class="form-ctrl"><option value="">اختر المنطقة</option></select></div>
+          <div class="form-grp"><label>العنوان *</label><input type="text" class="form-ctrl" placeholder="العنوان"></div>
+        </div>
+      </div>
+      <div class="modal-sect">
+        <div class="modal-sect-title">بيانات الشحنة</div>
+        <div class="form-row">
+          <div class="form-grp"><label>قيمة الشحنة</label><input type="number" class="form-ctrl" value="0"></div>
+          <div class="form-grp"><label>عدد العناصر</label><input type="number" class="form-ctrl" value="1"></div>
+          <div class="form-grp"><label>وصف الشحنة *</label><input type="text" class="form-ctrl" placeholder="وصف الشحنة"></div>
+        </div>
+        <div class="form-row g2">
+          <div class="form-grp"><label>الوزن</label><input type="number" class="form-ctrl" value="1"></div>
+          <div class="form-grp"><label>تكلفة الوزن</label><input type="number" class="form-ctrl" value="0"></div>
+        </div>
+        <div class="form-row g1">
+          <div class="form-grp"><label>ملاحظات</label><textarea class="form-ctrl" rows="3" placeholder="ملاحظات"></textarea></div>
+        </div>
+        <div style="display:flex;gap:20px;margin-top:8px">
+          <div class="toggle-row">
+            <div class="toggle" onclick="this.classList.toggle('on')"></div>
+            <span>السماح بفتح الشحنة</span>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle" onclick="this.classList.toggle('on')"></div>
+            <span>شامل مصاريف الشحن</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" onclick="saveShipment()">💾 حفظ</button>
+      <button class="btn btn-outline" onclick="closeModal('shipment-modal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Pricing Modal -->
+<div class="overlay" id="pricing-modal">
+  <div class="modal modal-lg">
+    <div class="modal-hd">
+      <h3>قائمة ١٠٠ شحنة - الاسعار</h3>
+      <button class="modal-close" onclick="closeModal('pricing-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>المدينة / المنطقة</th>
+            <th>السعر</th>
+            <th>المرتجع</th>
+            <th>قيمة الكيلو الزيادة</th>
+          </tr>
+        </thead>
+        <tbody id="pricing-rows">
+          <tr class="price-group-hd"><td colspan="4">الجيزة ▾</td></tr>
+          <tr><td>ميدان الجيزة</td><td><input value="55"></td><td><input value="10"></td><td><input value="0"></td></tr>
+          <tr><td>المنيب</td><td><input value="55"></td><td><input value="10"></td><td><input value="0"></td></tr>
+          <tr><td>الدقي</td><td><input value="55"></td><td><input value="10"></td><td><input value="0"></td></tr>
+          <tr><td>صفط اللبن</td><td><input value="55"></td><td><input value="10"></td><td><input value="0"></td></tr>
+          <tr><td>بولاق الدكرور</td><td><input value="55"></td><td><input value="10"></td><td><input value="0"></td></tr>
+          <tr class="price-group-hd"><td colspan="4">القاهرة ▾</td></tr>
+          <tr><td>حلوان</td><td><input value="60"></td><td><input value="10"></td><td><input value="0"></td></tr>
+          <tr><td>المعادي</td><td><input value="60"></td><td><input value="10"></td><td><input value="0"></td></tr>
+          <tr><td>مدينة نصر</td><td><input value="60"></td><td><input value="10"></td><td><input value="0"></td></tr>
+          <tr><td>زهراء مدينة نصر</td><td><input value="60"></td><td><input value="10"></td><td><input value="0"></td></tr>
+          <tr><td>مصر الجديدة</td><td><input value="60"></td><td><input value="10"></td><td><input value="0"></td></tr>
+          <tr><td>شبرا</td><td><input value="60"></td><td><input value="10"></td><td><input value="0"></td></tr>
+          <tr class="price-group-hd"><td colspan="4">الإسكندرية ▾</td></tr>
+          <tr><td>سيدي جابر</td><td><input value="75"></td><td><input value="15"></td><td><input value="0"></td></tr>
+          <tr><td>المنتزه</td><td><input value="75"></td><td><input value="15"></td><td><input value="0"></td></tr>
+          <tr><td>العجمي</td><td><input value="75"></td><td><input value="15"></td><td><input value="0"></td></tr>
+          <tr class="price-group-hd"><td colspan="4">الغربية ▾</td></tr>
+          <tr><td>طنطا</td><td><input value="70"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr><td>المحلة الكبرى</td><td><input value="70"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr><td>كفر الزيات</td><td><input value="70"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr><td>زفتى</td><td><input value="72"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr><td>السنطة</td><td><input value="72"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr><td>بسيون</td><td><input value="72"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr class="price-group-hd"><td colspan="4">كفر الشيخ ▾</td></tr>
+          <tr><td>كفر الشيخ (مركز)</td><td><input value="72"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr><td>دسوق</td><td><input value="72"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr><td>فوه</td><td><input value="75"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr><td>بلطيم</td><td><input value="75"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr><td>مطوبس</td><td><input value="75"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr><td>الرياض</td><td><input value="75"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr><td>سيدي سالم</td><td><input value="75"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr><td>قلين</td><td><input value="75"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr><td>بيلا</td><td><input value="75"></td><td><input value="15"></td><td><input value="5"></td></tr>
+          <tr><td>الحامول</td><td><input value="75"></td><td><input value="15"></td><td><input value="5"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" onclick="closeModal('pricing-modal');showToast('تم حفظ قائمة الاسعار ✓')">💾 حفظ</button>
+      <button class="btn btn-outline" onclick="closeModal('pricing-modal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Transfer Modal -->
+<div class="overlay" id="transfer-modal">
+  <div class="modal" style="width:540px">
+    <div class="modal-hd">
+      <h3>اضافة عملية تحويل</h3>
+      <button class="modal-close" onclick="closeModal('transfer-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div style="border:2px solid var(--accent);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:8px;cursor:pointer;background:rgba(249,115,22,.05)">
+          <input type="radio" name="party" checked> مندوب
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:8px;cursor:pointer" onclick="this.style.borderColor='var(--accent)'">
+          <input type="radio" name="party"> تاجر
+        </div>
+      </div>
+      <div class="form-row g2">
+        <div class="form-grp"><label>المندوب *</label><select class="form-ctrl"><option value="">اختر المندوب</option></select></div>
+        <div class="form-grp"><label>نوع العملية *</label><select class="form-ctrl"><option>تحصيل</option><option>صرف</option></select></div>
+      </div>
+      <div class="form-row g2">
+        <div class="form-grp"><label>طريقة الدفع *</label><select class="form-ctrl"><option>نقدي</option><option>تحويل بنكي</option><option>فودافون كاش</option></select></div>
+        <div class="form-grp"><label>المبلغ *</label><input type="number" class="form-ctrl" value="0"></div>
+      </div>
+      <div class="form-row g2">
+        <div class="form-grp"><label>ملاحظات</label><input type="text" class="form-ctrl" placeholder="ملاحظات"></div>
+        <div class="form-grp"><label>رفع صورة</label><input type="file" class="form-ctrl" style="padding:4px"></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" onclick="closeModal('transfer-modal');showToast('تم حفظ العملية ✓')">💾 حفظ</button>
+      <button class="btn btn-outline" onclick="closeModal('transfer-modal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Merchant Modal -->
+<div class="overlay" id="merchant-modal">
+  <div class="modal" style="width:620px">
+    <div class="modal-hd">
+      <h3 id="merchant-modal-title">إضافة تاجر جديد</h3>
+      <button class="modal-close" onclick="closeModal('merchant-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-sect">
+        <div class="modal-sect-title">البيانات الأساسية</div>
+        <div class="form-row">
+          <div class="form-grp"><label>اسم التاجر *</label><input type="text" class="form-ctrl" id="m-name" placeholder="اسم التاجر"></div>
+          <div class="form-grp"><label>كود التاجر</label><input type="text" class="form-ctrl" id="m-code" placeholder="يُولَّد تلقائياً"></div>
+          <div class="form-grp"><label>رقم الهاتف *</label><input type="tel" class="form-ctrl" id="m-phone" placeholder="رقم الهاتف"></div>
+        </div>
+        <div class="form-row g2">
+          <div class="form-grp"><label>الفرع *</label>
+            <select class="form-ctrl" id="m-branch">
+              <option value="">اختر الفرع</option>
+              <option>الفرع الرئيسي - القاهرة</option>
+              <option>فرع الجيزة</option>
+              <option>فرع الإسكندرية</option>
+            </select>
+          </div>
+          <div class="form-grp"><label>قائمة الأسعار</label>
+            <select class="form-ctrl" id="m-pricing">
+              <option value="">اختر القائمة</option>
+              <option>قائمة ١٠٠ شحنة</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-sect">
+        <div class="modal-sect-title">بيانات إضافية</div>
+        <div class="form-row g2">
+          <div class="form-grp"><label>البريد الإلكتروني</label><input type="email" class="form-ctrl" id="m-email" placeholder="example@mail.com"></div>
+          <div class="form-grp"><label>العنوان</label><input type="text" class="form-ctrl" id="m-address" placeholder="العنوان"></div>
+        </div>
+        <div class="form-row g1">
+          <div class="form-grp"><label>ملاحظات</label><textarea class="form-ctrl" id="m-notes" rows="2" placeholder="ملاحظات اختيارية"></textarea></div>
+        </div>
+        <div style="margin-top:10px">
+          <div class="toggle-row">
+            <div class="toggle on" id="m-active" onclick="this.classList.toggle('on')"></div>
+            <span>نشط</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" onclick="saveMerchant()">💾 حفظ</button>
+      <button class="btn btn-outline" onclick="closeModal('merchant-modal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Agent Modal -->
+<div class="overlay" id="agent-modal">
+  <div class="modal" style="width:600px">
+    <div class="modal-hd">
+      <h3 id="agent-modal-title">إضافة مندوب جديد</h3>
+      <button class="modal-close" onclick="closeModal('agent-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-sect">
+        <div class="modal-sect-title">البيانات الشخصية</div>
+        <div class="form-row">
+          <div class="form-grp"><label>اسم المندوب *</label><input type="text" class="form-ctrl" id="a-name" placeholder="الاسم الكامل"></div>
+          <div class="form-grp"><label>رقم الهاتف *</label><input type="tel" class="form-ctrl" id="a-phone" placeholder="رقم الهاتف"></div>
+          <div class="form-grp"><label>رقم الهاتف بديل</label><input type="tel" class="form-ctrl" id="a-phone2" placeholder="هاتف بديل"></div>
+        </div>
+        <div class="form-row g2">
+          <div class="form-grp"><label>المدينة *</label>
+            <select class="form-ctrl" id="a-city">
+              <option value="">اختر المدينة</option>
+              <option>القاهرة</option><option>الجيزة</option><option>الإسكندرية</option>
+            </select>
+          </div>
+          <div class="form-grp"><label>المنطقة *</label>
+            <select class="form-ctrl" id="a-zone">
+              <option value="">اختر المنطقة</option>
+              <option>مدينة نصر</option><option>المعادي</option><option>حلوان</option>
+              <option>الدقي</option><option>المنيب</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-sect">
+        <div class="modal-sect-title">بيانات العمل</div>
+        <div class="form-row g2">
+          <div class="form-grp"><label>الفرع</label>
+            <select class="form-ctrl" id="a-branch">
+              <option value="">اختر الفرع</option>
+              <option>الفرع الرئيسي - القاهرة</option>
+              <option>فرع الجيزة</option><option>فرع الإسكندرية</option>
+            </select>
+          </div>
+          <div class="form-grp"><label>نسبة التوصيل %</label><input type="number" class="form-ctrl" id="a-rate" value="0" min="0" max="100"></div>
+        </div>
+        <div style="display:flex;gap:20px;margin-top:10px">
+          <div class="toggle-row">
+            <div class="toggle on" id="a-active" onclick="this.classList.toggle('on')"></div>
+            <span>نشط</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" onclick="saveAgent()">💾 حفظ</button>
+      <button class="btn btn-outline" onclick="closeModal('agent-modal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reason Modal -->
+<div class="overlay" id="reason-modal">
+  <div class="modal" style="width:460px">
+    <div class="modal-hd">
+      <h3 id="reason-modal-title">إضافة سبب جديد</h3>
+      <button class="modal-close" onclick="closeModal('reason-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row g1" style="margin-bottom:12px">
+        <div class="form-grp"><label>اسم السبب *</label><input type="text" class="form-ctrl" id="r-name" placeholder="اسم السبب"></div>
+      </div>
+      <div class="form-row g1" style="margin-bottom:12px">
+        <div class="form-grp"><label>النوع *</label>
+          <select class="form-ctrl" id="r-type">
+            <option value="إلغاء">إلغاء</option>
+            <option value="تأجيل">تأجيل</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <div class="toggle-row">
+          <div class="toggle on" id="r-active" onclick="this.classList.toggle('on')"></div>
+          <span>نشط</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" onclick="saveReason()">💾 حفظ</button>
+      <button class="btn btn-outline" onclick="closeModal('reason-modal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- City Modal -->
+<div class="overlay" id="city-modal">
+  <div class="modal" style="width:480px">
+    <div class="modal-hd">
+      <h3 id="city-modal-title">إضافة مدينة جديدة</h3>
+      <button class="modal-close" onclick="closeModal('city-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row g2">
+        <div class="form-grp"><label>اسم المدينة *</label><input type="text" class="form-ctrl" id="c-name" placeholder="اسم المدينة"></div>
+        <div class="form-grp"><label>كود المدينة</label><input type="text" class="form-ctrl" id="c-code" placeholder="يُولَّد تلقائياً" readonly></div>
+      </div>
+      <div class="toggle-row" style="margin-top:12px">
+        <div class="toggle on" id="c-active" onclick="this.classList.toggle('on')"></div>
+        <span>نشط</span>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" onclick="saveCity()">💾 حفظ</button>
+      <button class="btn btn-outline" onclick="closeModal('city-modal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+<!-- Zone Modal -->
+<div class="overlay" id="zone-modal">
+  <div class="modal" style="width:480px">
+    <div class="modal-hd">
+      <h3 id="zone-modal-title">إضافة منطقة جديدة</h3>
+      <button class="modal-close" onclick="closeModal('zone-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row g1" style="margin-bottom:12px">
+        <div class="form-grp"><label>المدينة *</label>
+          <select class="form-ctrl" id="z-city"><option value="">اختر المدينة</option></select>
+        </div>
+      </div>
+      <div class="form-row g1">
+        <div class="form-grp"><label>اسم المنطقة *</label><input type="text" class="form-ctrl" id="z-name" placeholder="اسم المنطقة"></div>
+      </div>
+      <div class="toggle-row" style="margin-top:12px">
+        <div class="toggle on" id="z-active" onclick="this.classList.toggle('on')"></div>
+        <span>نشط</span>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" onclick="saveZone()">💾 حفظ</button>
+      <button class="btn btn-outline" onclick="closeModal('zone-modal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+<!-- Branch Modal -->
+<div class="overlay" id="branch-modal">
+  <div class="modal" style="width:540px">
+    <div class="modal-hd">
+      <h3 id="branch-modal-title">إضافة فرع جديد</h3>
+      <button class="modal-close" onclick="closeModal('branch-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row g2">
+        <div class="form-grp"><label>اسم الفرع *</label><input type="text" class="form-ctrl" id="b-name" placeholder="اسم الفرع"></div>
+        <div class="form-grp"><label>المدينة *</label>
+          <select class="form-ctrl" id="b-city"><option value="">اختر المدينة</option></select>
+        </div>
+      </div>
+      <div class="form-row g2">
+        <div class="form-grp"><label>اسم المدير</label><input type="text" class="form-ctrl" id="b-manager" placeholder="اسم المدير"></div>
+        <div class="form-grp"><label>رقم الهاتف</label><input type="tel" class="form-ctrl" id="b-phone" placeholder="رقم الهاتف"></div>
+      </div>
+      <div class="form-row g1">
+        <div class="form-grp"><label>العنوان</label><input type="text" class="form-ctrl" id="b-address" placeholder="عنوان الفرع"></div>
+      </div>
+      <div class="toggle-row" style="margin-top:10px">
+        <div class="toggle on" id="b-active" onclick="this.classList.toggle('on')"></div>
+        <span>نشط</span>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" onclick="saveBranch()">💾 حفظ</button>
+      <button class="btn btn-outline" onclick="closeModal('branch-modal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+<!-- Role Modal -->
+<div class="overlay" id="role-modal">
+  <div class="modal" style="width:500px">
+    <div class="modal-hd">
+      <h3 id="role-modal-title">إضافة دور جديد</h3>
+      <button class="modal-close" onclick="closeModal('role-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row g1" style="margin-bottom:12px">
+        <div class="form-grp"><label>اسم الدور *</label><input type="text" class="form-ctrl" id="ro-name" placeholder="اسم الدور"></div>
+      </div>
+      <div class="form-grp" style="margin-bottom:12px"><label style="font-size:10.5px;color:var(--muted);font-weight:600">الصلاحيات</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="perm-shipments" checked> الشحنات</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="perm-merchants" checked> التجار</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="perm-agents" checked> المناديب</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="perm-finance"> الحسابات</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="perm-settings"> التعريفات</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="perm-reports"> التقارير</label>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle on" id="ro-active" onclick="this.classList.toggle('on')"></div>
+        <span>نشط</span>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" onclick="saveRole()">💾 حفظ</button>
+      <button class="btn btn-outline" onclick="closeModal('role-modal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+<!-- User Modal -->
+<div class="overlay" id="user-modal">
+  <div class="modal" style="width:560px">
+    <div class="modal-hd">
+      <h3 id="user-modal-title">إضافة مستخدم جديد</h3>
+      <button class="modal-close" onclick="closeModal('user-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row g2">
+        <div class="form-grp"><label>الاسم الكامل *</label><input type="text" class="form-ctrl" id="u-name" placeholder="الاسم الكامل"></div>
+        <div class="form-grp"><label>اسم المستخدم *</label><input type="text" class="form-ctrl" id="u-username" placeholder="username"></div>
+      </div>
+      <div class="form-row g2">
+        <div class="form-grp"><label>كلمة المرور *</label><input type="password" class="form-ctrl" id="u-pass" placeholder="كلمة المرور"></div>
+        <div class="form-grp"><label>رقم الهاتف</label><input type="tel" class="form-ctrl" id="u-phone" placeholder="رقم الهاتف"></div>
+      </div>
+      <div class="form-row g2">
+        <div class="form-grp"><label>الدور *</label>
+          <select class="form-ctrl" id="u-role"><option value="">اختر الدور</option></select>
+        </div>
+        <div class="form-grp"><label>الفرع</label>
+          <select class="form-ctrl" id="u-branch"><option value="">اختر الفرع</option></select>
+        </div>
+      </div>
+      <div class="toggle-row" style="margin-top:10px">
+        <div class="toggle on" id="u-active" onclick="this.classList.toggle('on')"></div>
+        <span>نشط</span>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" onclick="saveUser()">💾 حفظ</button>
+      <button class="btn btn-outline" onclick="closeModal('user-modal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
