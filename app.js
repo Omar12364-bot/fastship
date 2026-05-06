@@ -202,7 +202,7 @@ function getBranchName(id) {
 function populateCitySelects() {
   const activeCities = cities.filter(c => c.active);
   const selects = [
-    'z-city', 'b-city', 'zone-city-filter',
+    'z-city', 'b-city', 'zone-city-filter', 'a-city',
     // in shipment & agent modals:
   ];
   selects.forEach(id => {
@@ -601,23 +601,38 @@ function saveUser() {
 // ════════════════════════════════
 // MERCHANT CRUD
 // ════════════════════════════════
-function saveMerchant() {
-  const name = document.getElementById('m-name').value.trim();
-  if (!name) { showToast('⚠️ اسم التاجر مطلوب'); return; }
-  const phone = document.getElementById('m-phone').value.trim();
-  if (!phone) { showToast('⚠️ رقم الهاتف مطلوب'); return; }
-  const branch = document.getElementById('m-branch').value;
-  const code = 'M' + String(merchants.length + 1).padStart(3,'0');
-  merchants.push({ name, code, branch, phone });
-  renderMerchants();
-  closeModal('merchant-modal');
+function openMerchantModal() {
+  editingMerchantIdx = -1;
   document.getElementById('m-name').value = '';
   document.getElementById('m-phone').value = '';
   document.getElementById('m-branch').value = '';
   document.getElementById('m-email').value = '';
   document.getElementById('m-address').value = '';
   document.getElementById('m-notes').value = '';
-  showToast('تم إضافة التاجر بنجاح ✓');
+  document.getElementById('merchant-modal-title').textContent = 'إضافة تاجر جديد';
+  openModal('merchant-modal');
+}
+function saveMerchant() {
+  const name = document.getElementById('m-name').value.trim();
+  if (!name) { showToast('⚠️ اسم التاجر مطلوب'); return; }
+  const phone = document.getElementById('m-phone').value.trim();
+  if (!phone) { showToast('⚠️ رقم الهاتف مطلوب'); return; }
+  const branch = document.getElementById('m-branch').value;
+  const email = document.getElementById('m-email').value.trim();
+  const address = document.getElementById('m-address').value.trim();
+  const notes = document.getElementById('m-notes').value.trim();
+  if (editingMerchantIdx >= 0) {
+    const m = merchants[editingMerchantIdx];
+    Object.assign(m, { name, phone, branch, email, address, notes });
+    editingMerchantIdx = -1;
+    showToast('تم تعديل بيانات التاجر ✓');
+  } else {
+    const code = 'M' + String(merchants.length + 1).padStart(3,'0');
+    merchants.push({ name, code, branch, phone, email, address, notes });
+    showToast('تم إضافة التاجر بنجاح ✓');
+  }
+  renderMerchants();
+  closeModal('merchant-modal');
 }
 function renderMerchants() {
   const tb = document.querySelector('#page-merchants tbody');
@@ -637,8 +652,13 @@ function renderMerchants() {
 }
 function editMerchant(i) {
   const m = merchants[i];
+  editingMerchantIdx = i;
   document.getElementById('m-name').value = m.name;
   document.getElementById('m-phone').value = m.phone;
+  document.getElementById('m-branch').value = m.branch || '';
+  document.getElementById('m-email').value = m.email || '';
+  document.getElementById('m-address').value = m.address || '';
+  document.getElementById('m-notes').value = m.notes || '';
   document.getElementById('merchant-modal-title').textContent = 'تعديل بيانات التاجر';
   openModal('merchant-modal');
 }
@@ -646,21 +666,38 @@ function editMerchant(i) {
 // ════════════════════════════════
 // AGENT CRUD
 // ════════════════════════════════
-function saveAgent() {
-  const name = document.getElementById('a-name').value.trim();
-  if (!name) { showToast('⚠️ اسم المندوب مطلوب'); return; }
-  const phone = document.getElementById('a-phone').value.trim();
-  if (!phone) { showToast('⚠️ رقم الهاتف مطلوب'); return; }
-  const zone = document.getElementById('a-zone').value;
-  agents.push({ name, phone, zone });
-  renderAgents();
-  closeModal('agent-modal');
+function openAgentModal() {
+  editingAgentIdx = -1;
   document.getElementById('a-name').value = '';
   document.getElementById('a-phone').value = '';
   document.getElementById('a-phone2').value = '';
   document.getElementById('a-zone').value = '';
   document.getElementById('a-city').value = '';
-  showToast('تم إضافة المندوب بنجاح ✓');
+  document.getElementById('a-branch').value = '';
+  document.getElementById('a-rate').value = '0';
+  document.getElementById('agent-modal-title').textContent = 'إضافة مندوب جديد';
+  openModal('agent-modal');
+}
+function saveAgent() {
+  const name = document.getElementById('a-name').value.trim();
+  if (!name) { showToast('⚠️ اسم المندوب مطلوب'); return; }
+  const phone = document.getElementById('a-phone').value.trim();
+  if (!phone) { showToast('⚠️ رقم الهاتف مطلوب'); return; }
+  const phone2 = document.getElementById('a-phone2').value.trim();
+  const city = document.getElementById('a-city').value;
+  const zone = document.getElementById('a-zone').value;
+  const branch = document.getElementById('a-branch').value;
+  const rate = document.getElementById('a-rate').value;
+  if (editingAgentIdx >= 0) {
+    Object.assign(agents[editingAgentIdx], { name, phone, phone2, city, zone, branch, rate });
+    editingAgentIdx = -1;
+    showToast('تم تعديل بيانات المندوب ✓');
+  } else {
+    agents.push({ name, phone, phone2, city, zone, branch, rate });
+    showToast('تم إضافة المندوب بنجاح ✓');
+  }
+  renderAgents();
+  closeModal('agent-modal');
 }
 function renderAgents() {
   const tb = document.querySelector('#page-agents tbody');
@@ -679,8 +716,15 @@ function renderAgents() {
 }
 function editAgent(i) {
   const a = agents[i];
+  editingAgentIdx = i;
   document.getElementById('a-name').value = a.name;
   document.getElementById('a-phone').value = a.phone;
+  document.getElementById('a-phone2').value = a.phone2 || '';
+  document.getElementById('a-city').value = a.city || '';
+  if (a.city) updateZonesForCity(a.city, 'a-zone');
+  document.getElementById('a-zone').value = a.zone || '';
+  document.getElementById('a-branch').value = a.branch || '';
+  document.getElementById('a-rate').value = a.rate || 0;
   document.getElementById('agent-modal-title').textContent = 'تعديل بيانات المندوب';
   openModal('agent-modal');
 }
