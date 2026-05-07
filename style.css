@@ -456,3 +456,17 @@ tbody tr:hover td { background: rgba(241,245,249,.6); }
 /* scrollbar */
 .content::-webkit-scrollbar { width: 5px; }
 .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+/* ─── PRINT ─── */
+@media print {
+  .sidebar,.topbar,.filter-card,.table-toolbar,.pager,
+  .btn,.act-btn,.icon-btn,.overlay,.toast { display:none!important; }
+  body { background:#fff; overflow:visible; }
+  .main { overflow:visible; }
+  .content { overflow:visible; padding:0; }
+  .page { display:block!important; }
+  .page:not(.active) { display:none!important; }
+  .table-card { box-shadow:none; border:1px solid #ccc; }
+  thead th { background:#f1f5f9!important; }
+  .kpi-grid { grid-template-columns:repeat(5,1fr); }
+}

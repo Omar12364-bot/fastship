@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FastShip Express - إدارة الشحن والتوصيل</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -73,7 +73,7 @@
     </div>
   </div>
 
-  <div class="sidebar-foot">Powered by<br><b>Muhammed Mashhour</b></div>
+  <div class="sidebar-foot">Powered by<br><b>Omar Alaasar</b></div>
 </nav>
 
 <!-- ═══════════════════════════════ MAIN ═══════════════════════════════ -->
@@ -83,7 +83,7 @@
   <header class="topbar">
     <div class="topbar-left">
       <div>
-        <div class="topbar-breadcrumb">DASHBOARD</div>
+        <div class="topbar-breadcrumb" id="pageBreadcrumb">DASHBOARD</div>
         <div class="topbar-title" id="pageTitle">لوحة التحكم</div>
       </div>
     </div>
@@ -93,11 +93,13 @@
     </div>
     <div class="topbar-right">
       <div class="live-badge"><div class="live-dot"></div> البيانات محدثة</div>
+      <div style="font-size:12px;color:var(--muted);font-weight:600" id="topbar-username">مدير النظام</div>
+      <div class="icon-btn" title="طباعة الصفحة" onclick="window.print()">🖨️</div>
+      <div class="icon-btn" title="تسجيل الخروج" onclick="doLogout()">🚪</div>
       <div class="icon-btn">
         🔔
         <span class="notif-dot">0</span>
       </div>
-      <div class="icon-btn">☰</div>
     </div>
   </header>
 
@@ -255,8 +257,8 @@
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
         <div></div>
         <div style="display:flex;gap:8px">
-          <button class="btn btn-outline" onclick="showToast('جاري تحميل الملف...')">📥 تحميل ملف مثال</button>
-          <button class="btn btn-accent" onclick="openModal('shipment-modal')">➕ اضافة جديد</button>
+          <button class="btn btn-outline" onclick="downloadSampleFile()">📥 تحميل ملف مثال</button>
+          <button class="btn btn-accent" onclick="openShipmentModal()">➕ اضافة جديد</button>
         </div>
       </div>
 
@@ -294,11 +296,11 @@
       <div class="table-card">
         <div class="table-toolbar">
           <div class="toolbar-left">
-            <button class="btn btn-green btn-sm">🖨️ طباعة بوليصة</button>
-            <button class="btn btn-blue btn-sm">👤 تعيين على مندوب</button>
-            <button class="btn btn-yellow btn-sm">🔄 تغيير حالة الشحنة</button>
-            <button class="btn btn-outline btn-sm">📤 تصدير إلى Excel</button>
-            <button class="btn btn-red btn-sm">🔃 إنشاء طلب استرجاع</button>
+            <button class="btn btn-green btn-sm" onclick="printSelectedBills()">🖨️ طباعة بوليصة</button>
+            <button class="btn btn-blue btn-sm" onclick="assignAgent()">👤 تعيين على مندوب</button>
+            <button class="btn btn-yellow btn-sm" onclick="changeStatus()">🔄 تغيير حالة الشحنة</button>
+            <button class="btn btn-outline btn-sm" onclick="exportToExcel()">📤 تصدير إلى Excel</button>
+            <button class="btn btn-red btn-sm" onclick="createReturn()">🔃 إنشاء طلب استرجاع</button>
           </div>
           <div class="count-badge">الشحنات المحددة: (0) شحنة</div>
         </div>
@@ -486,7 +488,7 @@
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;justify-content:flex-end">
         <div class="search-wrap" style="max-width:260px"><span>🔍</span><input type="text" placeholder="البحث..."></div>
         <button class="btn btn-outline">🔍</button>
-        <button class="btn btn-accent" onclick="openModal('reason-modal')">➕ اضافة جديد</button>
+        <button class="btn btn-accent" onclick="openReasonModal()">➕ اضافة جديد</button>
       </div>
       <div class="table-card">
         <div class="table-wrap">
@@ -639,29 +641,29 @@
         <div class="modal-sect-title">بيانات عامة</div>
         <div class="form-row">
           <div class="form-grp"><label>التاجر *</label><select class="form-ctrl"><option value="">اختر التاجر</option></select></div>
-          <div class="form-grp"><label>الفرع *</label><select class="form-ctrl"><option value="">اختر الفرع</option></select></div>
+          <div class="form-grp"><label>الفرع *</label><select class="form-ctrl" id="sh-branch"><option value="">اختر الفرع</option></select></div>
           <div class="form-grp"><label>الرقم المرجعي</label><input type="text" class="form-ctrl" placeholder="الرقم المرجعي"></div>
         </div>
       </div>
       <div class="modal-sect">
         <div class="modal-sect-title">بيانات المستلم</div>
         <div class="form-row">
-          <div class="form-grp"><label>اسم المستلم *</label><input type="text" class="form-ctrl" placeholder="اسم المستلم"></div>
-          <div class="form-grp"><label>رقم الهاتف *</label><input type="tel" class="form-ctrl" placeholder="رقم الهاتف"></div>
-          <div class="form-grp"><label>رقم الهاتف بديل</label><input type="tel" class="form-ctrl" placeholder="رقم الهاتف بديل"></div>
+          <div class="form-grp"><label>اسم المستلم *</label><input type="text" class="form-ctrl" id="sh-recipient" placeholder="اسم المستلم"></div>
+          <div class="form-grp"><label>رقم الهاتف *</label><input type="tel" class="form-ctrl" id="sh-phone" placeholder="رقم الهاتف"></div>
+          <div class="form-grp"><label>رقم الهاتف بديل</label><input type="tel" class="form-ctrl" id="sh-phone2" placeholder="رقم الهاتف بديل"></div>
         </div>
         <div class="form-row">
-          <div class="form-grp"><label>المدينة *</label><select class="form-ctrl"><option value="">اختر المدينة</option><option>القاهرة</option><option>الجيزة</option><option>الإسكندرية</option></select></div>
-          <div class="form-grp"><label>المنطقة *</label><select class="form-ctrl"><option value="">اختر المنطقة</option></select></div>
+          <div class="form-grp"><label>المدينة *</label><select class="form-ctrl" id="sh-city" onchange="updateZonesForCity(this.value,'sh-zone')"><option value="">اختر المدينة</option></select></div>
+          <div class="form-grp"><label>المنطقة *</label><select class="form-ctrl" id="sh-zone"><option value="">اختر المنطقة</option></select></div>
           <div class="form-grp"><label>العنوان *</label><input type="text" class="form-ctrl" placeholder="العنوان"></div>
         </div>
       </div>
       <div class="modal-sect">
         <div class="modal-sect-title">بيانات الشحنة</div>
         <div class="form-row">
-          <div class="form-grp"><label>قيمة الشحنة</label><input type="number" class="form-ctrl" value="0"></div>
+          <div class="form-grp"><label>قيمة الشحنة</label><input type="number" class="form-ctrl" id="sh-amount" value="0"></div>
           <div class="form-grp"><label>عدد العناصر</label><input type="number" class="form-ctrl" value="1"></div>
-          <div class="form-grp"><label>وصف الشحنة *</label><input type="text" class="form-ctrl" placeholder="وصف الشحنة"></div>
+          <div class="form-grp"><label>وصف الشحنة *</label><input type="text" class="form-ctrl" id="sh-desc" placeholder="وصف الشحنة"></div>
         </div>
         <div class="form-row g2">
           <div class="form-grp"><label>الوزن</label><input type="number" class="form-ctrl" value="1"></div>
@@ -861,10 +863,7 @@
         </div>
         <div class="form-row g2">
           <div class="form-grp"><label>المدينة *</label>
-            <select class="form-ctrl" id="a-city">
-              <option value="">اختر المدينة</option>
-              <option>القاهرة</option><option>الجيزة</option><option>الإسكندرية</option>
-            </select>
+            <select class="form-ctrl" id="a-city" onchange="updateZonesForCity(this.value,'a-zone')"><option value="">اختر المدينة</option></select>
           </div>
           <div class="form-grp"><label>المنطقة *</label>
             <select class="form-ctrl" id="a-zone">
@@ -1087,6 +1086,6 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<script src="js/app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

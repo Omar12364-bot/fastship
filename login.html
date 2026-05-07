@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FastShip Express - تسجيل الدخول</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --accent:#f97316;
+  --accent-dark:#ea6c0a;
+  --bg:#0f172a;
+  --card:#1e293b;
+  --border:rgba(255,255,255,0.08);
+  --text:#f1f5f9;
+  --muted:#94a3b8;
+  --input-bg:#0f172a;
+  --green:#22c55e;
+  --red:#ef4444;
+}
+body{
+  font-family:'Cairo',sans-serif;
+  background:var(--bg);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  position:relative;
+}
+
+/* animated background */
+.bg-orbs{position:fixed;inset:0;pointer-events:none;z-index:0}
+.orb{
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:0.15;
+  animation:floatOrb 12s ease-in-out infinite;
+}
+.orb1{width:400px;height:400px;background:var(--accent);top:-100px;right:-100px;animation-delay:0s}
+.orb2{width:300px;height:300px;background:#3b82f6;bottom:-80px;left:-80px;animation-delay:4s}
+.orb3{width:200px;height:200px;background:#8b5cf6;top:50%;left:50%;animation-delay:8s}
+@keyframes floatOrb{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(30px,-30px) scale(1.05)}
+  66%{transform:translate(-20px,20px) scale(0.95)}
+}
+
+/* grid pattern */
+.bg-grid{
+  position:fixed;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size:50px 50px;
+}
+
+.login-wrap{
+  position:relative;z-index:10;
+  width:100%;max-width:440px;padding:24px;
+}
+
+.brand{text-align:center;margin-bottom:32px}
+.brand-logo{
+  width:64px;height:64px;border-radius:16px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:28px;margin-bottom:14px;
+  box-shadow:0 0 40px rgba(249,115,22,0.4);
+  animation:pulseLogo 3s ease-in-out infinite;
+}
+@keyframes pulseLogo{
+  0%,100%{box-shadow:0 0 40px rgba(249,115,22,0.4)}
+  50%{box-shadow:0 0 60px rgba(249,115,22,0.6)}
+}
+.brand h1{color:var(--text);font-size:24px;font-weight:900;letter-spacing:-0.5px}
+.brand p{color:var(--muted);font-size:13px;margin-top:4px}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:32px;
+  box-shadow:0 32px 64px rgba(0,0,0,0.4);
+  backdrop-filter:blur(10px);
+}
+
+.card-title{
+  font-size:20px;font-weight:800;color:var(--text);
+  margin-bottom:6px;
+}
+.card-sub{font-size:12.5px;color:var(--muted);margin-bottom:28px}
+
+.form-grp{margin-bottom:18px}
+.form-grp label{
+  display:block;font-size:11.5px;font-weight:700;
+  color:var(--muted);margin-bottom:8px;
+}
+.input-wrap{position:relative}
+.input-wrap .icon{
+  position:absolute;top:50%;right:14px;transform:translateY(-50%);
+  font-size:16px;color:var(--muted);pointer-events:none;
+}
+.form-ctrl{
+  width:100%;
+  background:var(--input-bg);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:13px 44px 13px 14px;
+  font-family:'Cairo',sans-serif;
+  font-size:14px;color:var(--text);outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.form-ctrl::placeholder{color:#475569}
+.form-ctrl:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(249,115,22,0.15);
+}
+.eye-btn{
+  position:absolute;top:50%;left:14px;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;font-size:16px;
+  color:var(--muted);transition:color .2s;padding:4px;
+}
+.eye-btn:hover{color:var(--text)}
+
+.remember-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:24px;
+}
+.remember-label{
+  display:flex;align-items:center;gap:8px;
+  font-size:12.5px;color:var(--muted);cursor:pointer;user-select:none;
+}
+.custom-check{
+  width:18px;height:18px;border-radius:5px;
+  border:1px solid var(--border);background:var(--input-bg);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.custom-check.checked{background:var(--accent);border-color:var(--accent)}
+.custom-check.checked::after{content:'✓';color:#fff;font-size:11px;font-weight:800}
+.forgot{font-size:12px;color:var(--accent);cursor:pointer;text-decoration:none}
+.forgot:hover{text-decoration:underline}
+
+.btn-login{
+  width:100%;padding:14px;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+  border:none;color:#fff;font-family:'Cairo',sans-serif;
+  font-size:15px;font-weight:800;cursor:pointer;
+  transition:all .25s;
+  box-shadow:0 8px 24px rgba(249,115,22,0.35);
+  position:relative;overflow:hidden;
+}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(249,115,22,0.45)}
+.btn-login:active{transform:translateY(0)}
+.btn-login.loading{pointer-events:none;opacity:0.8}
+.btn-login .spinner{
+  display:none;width:18px;height:18px;
+  border:2px solid rgba(255,255,255,0.3);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin .7s linear infinite;
+  margin:0 auto;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-login.loading .btn-text{display:none}
+.btn-login.loading .spinner{display:block}
+
+.divider{
+  display:flex;align-items:center;gap:12px;
+  margin:22px 0;color:var(--muted);font-size:11.5px;
+}
+.divider::before,.divider::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+
+.demo-accounts{
+  display:flex;flex-direction:column;gap:8px;
+}
+.demo-btn{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:9px;
+  border:1px solid var(--border);background:var(--input-bg);
+  cursor:pointer;transition:all .2s;
+  font-family:'Cairo',sans-serif;
+}
+.demo-btn:hover{border-color:var(--accent);background:rgba(249,115,22,0.06)}
+.demo-ico{font-size:18px;width:24px;text-align:center}
+.demo-info{flex:1}
+.demo-role{font-size:12.5px;font-weight:700;color:var(--text)}
+.demo-cred{font-size:11px;color:var(--muted);font-family:monospace;direction:ltr;text-align:right}
+.demo-fill{font-size:10px;color:var(--accent);font-weight:700;margin-right:auto;white-space:nowrap}
+
+.error-msg{
+  background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);
+  color:#fca5a5;border-radius:8px;padding:10px 14px;
+  font-size:12.5px;margin-bottom:16px;display:none;
+  animation:shake .4s ease;
+}
+.error-msg.show{display:block}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-6px)}
+  75%{transform:translateX(6px)}
+}
+
+.footer-note{
+  text-align:center;margin-top:24px;
+  font-size:11px;color:#334155;
+}
+.footer-note b{color:#475569}
+</style>
+</head>
+<body>
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+<div class="bg-grid"></div>
+
+<div class="login-wrap">
+  <div class="brand">
+    <div class="brand-logo">📦</div>
+    <h1>FastShip Express</h1>
+    <p>نظام إدارة الشحن والتوصيل</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">مرحباً بك 👋</div>
+    <div class="card-sub">سجل الدخول للوصول إلى لوحة التحكم</div>
+
+    <div class="error-msg" id="errorMsg">❌ اسم المستخدم أو كلمة المرور غير صحيحة</div>
+
+    <div class="form-grp">
+      <label>اسم المستخدم</label>
+      <div class="input-wrap">
+        <span class="icon">👤</span>
+        <input type="text" class="form-ctrl" id="username" placeholder="أدخل اسم المستخدم" autocomplete="username">
+      </div>
+    </div>
+
+    <div class="form-grp">
+      <label>كلمة المرور</label>
+      <div class="input-wrap">
+        <span class="icon">🔒</span>
+        <input type="password" class="form-ctrl" id="password" placeholder="أدخل كلمة المرور" autocomplete="current-password">
+        <button class="eye-btn" onclick="togglePass()" id="eyeBtn" title="إظهار/إخفاء">👁️</button>
+      </div>
+    </div>
+
+    <div class="remember-row">
+      <label class="remember-label" onclick="toggleRemember()">
+        <div class="custom-check" id="rememberCheck"></div>
+        <span>تذكرني</span>
+      </label>
+      <a class="forgot" href="#">نسيت كلمة المرور؟</a>
+    </div>
+
+    <button class="btn-login" id="loginBtn" onclick="doLogin()">
+      <span class="btn-text">🚀 تسجيل الدخول</span>
+      <div class="spinner"></div>
+    </button>
+
+    <div class="divider">أو تجربة حساب تجريبي</div>
+
+    <div class="demo-accounts">
+      <div class="demo-btn" onclick="fillDemo('admin','admin123')">
+        <span class="demo-ico">👑</span>
+        <div class="demo-info">
+          <div class="demo-role">مدير عام</div>
+          <div class="demo-cred">admin / admin123</div>
+        </div>
+        <span class="demo-fill">ملء تلقائي ←</span>
+      </div>
+      <div class="demo-btn" onclick="fillDemo('ahmed','ahmed123')">
+        <span class="demo-ico">📋</span>
+        <div class="demo-info">
+          <div class="demo-role">موظف استلام</div>
+          <div class="demo-cred">ahmed / ahmed123</div>
+        </div>
+        <span class="demo-fill">ملء تلقائي ←</span>
+      </div>
+      <div class="demo-btn" onclick="fillDemo('mona','mona123')">
+        <span class="demo-ico">💰</span>
+        <div class="demo-info">
+          <div class="demo-role">محاسب</div>
+          <div class="demo-cred">mona / mona123</div>
+        </div>
+        <span class="demo-fill">ملء تلقائي ←</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">Powered by <b>Omar Alaasar</b></div>
+</div>
+
+<script>
+// Demo credentials
+const USERS = [
+  { username:'admin', password:'admin123', name:'محمد مشهور', role:'مدير عام' },
+  { username:'ahmed', password:'ahmed123', name:'أحمد سامي',  role:'موظف استلام' },
+  { username:'mona',  password:'mona123',  name:'منى علي',    role:'محاسب' },
+];
+
+function fillDemo(u, p) {
+  document.getElementById('username').value = u;
+  document.getElementById('password').value = p;
+  document.getElementById('username').focus();
+}
+
+function togglePass() {
+  const inp = document.getElementById('password');
+  const btn = document.getElementById('eyeBtn');
+  if (inp.type === 'password') {
+    inp.type = 'text'; btn.textContent = '🙈';
+  } else {
+    inp.type = 'password'; btn.textContent = '👁️';
+  }
+}
+
+function toggleRemember() {
+  document.getElementById('rememberCheck').classList.toggle('checked');
+}
+
+function doLogin() {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('errorMsg');
+
+  err.classList.remove('show');
+
+  if (!username || !password) {
+    err.textContent = '⚠️ برجاء إدخال اسم المستخدم وكلمة المرور';
+    err.classList.add('show'); return;
+  }
+
+  btn.classList.add('loading');
+
+  setTimeout(() => {
+    const user = USERS.find(u => u.username === username && u.password === password);
+    btn.classList.remove('loading');
+
+    if (user) {
+      // Save session
+      sessionStorage.setItem('fs_user', JSON.stringify(user));
+      localStorage.setItem('fs_loggedIn', '1');
+      // Redirect
+      window.location.href = 'index.html';
+    } else {
+      err.textContent = '❌ اسم المستخدم أو كلمة المرور غير صحيحة';
+      err.classList.add('show');
+      document.getElementById('password').value = '';
+      document.getElementById('password').focus();
+    }
+  }, 900);
+}
+
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// If already logged in, redirect
+if (localStorage.getItem('fs_loggedIn')) {
+  window.location.href = 'index.html';
+}
+</script>
+</body>
+</html>
