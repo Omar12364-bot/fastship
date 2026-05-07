@@ -52,21 +52,5 @@ fastship-express/
 - **🚪 تسجيل خروج** آمن
 - **✅ كل الأزرار** تعمل بشكل صحيح
 
-## 🚀 تشغيل المشروع
 
-```
-افتح login.html في المتصفح
-```
-لا يحتاج server أو installation — فقط browser.
-
-## 📌 GitHub Pages
-
-```
-1. ارفع الملفات على GitHub repository
-2. اذهب لـ Settings > Pages
-3. اختر branch: main, folder: / (root)
-4. Site URL: https://username.github.io/repo-name/login.html
-```
-
----
 Powered by **Omar Alassarhttps:**
