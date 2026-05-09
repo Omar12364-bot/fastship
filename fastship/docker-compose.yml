@@ -1,0 +1,64 @@
+version: '3.9'
+
+services:
+
+  # ── PostgreSQL ──────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: fastship_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       fastship
+      POSTGRES_USER:     fastship_user
+      POSTGRES_PASSWORD: fastship_pass_2024
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./backend/src/db/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./backend/src/db/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fastship_user -d fastship"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Node.js API ─────────────────────────────────
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fastship_api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV:       production
+      PORT:           3000
+      DB_HOST:        db
+      DB_PORT:        5432
+      DB_NAME:        fastship
+      DB_USER:        fastship_user
+      DB_PASS:        fastship_pass_2024
+      JWT_SECRET:     fastship_jwt_super_secret_change_in_prod
+      JWT_EXPIRES_IN: 8h
+      FRONTEND_URL:   http://localhost
+    volumes:
+      - uploads_data:/app/uploads
+    # لا expose للخارج — nginx هو البوابة
+
+  # ── Nginx (Frontend + Reverse Proxy) ───────────
+  nginx:
+    image: nginx:alpine
+    container_name: fastship_nginx
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+volumes:
+  pg_data:
+  uploads_data:
